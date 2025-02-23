@@ -1,0 +1,143 @@
+<context>
+You are working with:
+- TypeScript
+- Node.js with Next.js (App Router)
+- React
+- TailwindCSS and Shadcn UI
+- Radix UI
+- Prisma
+- PostgreSQL
+- [Additional project-specific dependencies]
+</context>
+
+<architecture>
+Project structure:
+- `/app` - Next.js app router pages and layouts
+- `/components` - React components (organized by domain)
+- `/lib` - Shared utilities and helpers
+- `/types` - TypeScript type definitions
+- `/styles` - Global styles and Tailwind configuration
+- `/prisma` - Database schema and migrations
+- `/public` - Static assets
+- `/tests` - Test files and test utilities
+</architecture>
+
+<project>
+# Sport Calendar - Application de Suivi Sportif
+
+## Overview
+
+Sport Calendar est une application conçue pour permettre aux sportifs de planifier et suivre leurs entraînements. L'objectif principal est de donner un retour visuel sur la progression et d'accéder facilement aux anciennes sessions grâce à une vue calendrier intuitive.
+
+## Key Features (MVP)
+
+### 1. Core Functionality
+
+- **Dashboard (Page d’accueil)** : Affichage des informations clés (dernière activité réalisée, prochaine activité à faire, statistiques principales).
+- **Calendrier** : Vue mensuelle et hebdomadaire pour voir et planifier les entraînements.
+- **Statistiques** : Affichage des performances (distance totale, temps total, charge d’entraînement).
+- **Favoris** : Liste des activités marquées comme préférées pour les retrouver facilement.
+
+### 2. Technical Infrastructure
+
+- **Authentication** : OAuth via Strava pour l'import des activités.
+- **Database** : PostgreSQL avec Prisma ORM.
+- **API Layer** : API REST pour la gestion des activités planifiées.
+- **State Management** : Server Components et minimal client state.
+
+## Design & UX
+
+- **Minimaliste et épuré**, inspiré de Strava.
+- **Code couleur de Strava** pour une expérience familière.
+- **Interface intuitive** et simple d'utilisation, sans surcharge d'options.
+  </project>
+
+<development>
+## Development Guidelines
+
+### 1. Code Style and Structure
+
+- Write concise, technical TypeScript code with accurate examples
+- Use functional and declarative programming patterns; avoid classes
+- Prefer iteration and modularization over code duplication
+- Use descriptive variable names with auxiliary verbs (isLoading, hasError)
+- Structure files: exported component, subcomponents, helpers, types
+- Avoid unnecessary curly braces in conditionals
+- Use declarative JSX
+
+### 2. Naming Conventions
+
+- Use lowercase with dashes for directories (components/auth-wizard)
+- Favor named exports for components
+- Prefix event handlers with "handle" (handleClick, handleSubmit)
+- Use descriptive, action-based names for functions
+
+### 3. TypeScript Standards
+
+```typescript
+// Prefer types over interfaces
+type UserData = {
+  id: string;
+  email: string;
+  preferences?: UserPreferences;
+};
+
+// Use const maps instead of enums
+const UserRole = {
+  ADMIN: "admin",
+  USER: "user",
+  GUEST: "guest",
+} as const;
+type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+// Required component props type
+type Props = {
+  data: UserData;
+  onAction: (id: string) => void;
+};
+
+// React component syntax - ALWAYS use this format
+export const MyComponent = (props: Props) => {
+  return <div>Component content</div>;
+};
+```
+
+</development>
+
+<standards>
+## Quality Standards
+
+### 1. Code Quality
+
+- Consistent formatting (Prettier)
+- ESLint rules enforcement
+- Strict TypeScript checking
+- Component testing requirements
+- Performance benchmarks
+  </standards>
+
+<deployment>
+## Deployment & CI/CD
+
+### 1. Environment Configuration
+
+- Development
+- Staging
+- Production
+- Feature branches
+
+### 2. Build Process
+
+- Dependencies installation
+- Type checking
+- Testing
+- Building
+- Deployment
+
+### 3. Monitoring
+
+- Error tracking
+- Performance monitoring
+- Usage analytics
+- Status reporting
+  </deployment>
