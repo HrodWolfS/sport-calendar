@@ -7,8 +7,8 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     console.log("Session dans l'API activities:", session);
 
-    if (!session?.user || !session.user.accessToken) {
-      console.log("Pas de session ou d'access token");
+    if (!session?.user?.accessToken) {
+      console.log("Pas de token d'accès");
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
@@ -16,6 +16,7 @@ export async function GET() {
       "Appel à l'API Strava avec le token:",
       session.user.accessToken
     );
+
     const response = await fetch(
       "https://www.strava.com/api/v3/athlete/activities",
       {
@@ -26,8 +27,12 @@ export async function GET() {
     );
 
     if (!response.ok) {
-      console.error("Erreur Strava:", await response.text());
-      throw new Error("Erreur lors de la récupération des activités");
+      const errorText = await response.text();
+      console.error("Erreur Strava:", errorText);
+      return NextResponse.json(
+        { error: "Erreur Strava" },
+        { status: response.status }
+      );
     }
 
     const activities = await response.json();

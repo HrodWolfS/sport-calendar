@@ -93,7 +93,7 @@ export default function Home() {
                   <p className="text-sm text-strava-gray-500">Temps total</p>
                   <p className="text-2xl font-bold text-strava-gray-800">
                     {Math.floor(stats.monthly.totalDuration / 60)}h
-                    {stats.monthly.totalDuration % 60}
+                    {(stats.monthly.totalDuration % 60).toFixed(0)}
                   </p>
                 </div>
                 <div>

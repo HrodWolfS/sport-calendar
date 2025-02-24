@@ -46,9 +46,22 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  stravaId      String?   @unique
+  username      String?
+  city          String?
+  state         String?
+  country       String?
+  sex           String?
+  weight        Float?
+  premium       Boolean   @default(false)
+  summit        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
   activities    Activity[]
+
+  @@index([stravaId])
 }
 
 model VerificationToken {
@@ -62,10 +75,10 @@ model VerificationToken {
 model Activity {
   id           String   @id @default(cuid())
   title        String
-  type         String   // "running" | "musculation"
+  type         String
   date         DateTime
-  duration     Int      // en minutes
-  distance     Float?   // en km, uniquement pour la course
+  duration     Int
+  distance     Float?
   trainingLoad Int      @default(0)
   calories     Int      @default(0)
   isFavorite   Boolean  @default(false)

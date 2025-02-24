@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 type StravaActivity = {
@@ -20,26 +20,29 @@ export const ActivityList = () => {
 
   useEffect(() => {
     const fetchActivities = async () => {
-      if (!session?.user) {
-        console.log("Pas de session utilisateur");
+      if (!session?.user?.accessToken) {
+        console.log("Pas de token d'accès");
         return;
       }
 
-      console.log("Session dans ActivityList:", session);
       setLoading(true);
       setError(null);
 
       try {
-        console.log("Appel à l'API activities...");
         const response = await fetch("/api/strava/activities");
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Erreur API:", errorText);
-          throw new Error("Erreur lors de la récupération des activités");
+          if (response.status === 401) {
+            // Token expiré ou invalide
+            signIn("strava");
+            return;
+          }
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "Erreur lors de la récupération des activités"
+          );
         }
 
         const data = await response.json();
-        console.log("Activités reçues:", data);
         setActivities(data);
       } catch (err) {
         console.error("Erreur lors du fetch:", err);
@@ -70,6 +73,12 @@ export const ActivityList = () => {
         <p className="text-strava-gray-600">
           Connecte-toi pour voir tes activités
         </p>
+        <button
+          onClick={() => signIn("strava")}
+          className="mt-4 px-4 py-2 bg-strava-orange text-white rounded-md hover:bg-strava-orange/90"
+        >
+          Se connecter avec Strava
+        </button>
       </div>
     );
   }
@@ -86,6 +95,12 @@ export const ActivityList = () => {
     return (
       <div className="p-4 bg-red-50 rounded-lg">
         <p className="text-red-600">{error}</p>
+        <button
+          onClick={() => signIn("strava")}
+          className="mt-4 px-4 py-2 bg-strava-orange text-white rounded-md hover:bg-strava-orange/90"
+        >
+          Reconnecter avec Strava
+        </button>
       </div>
     );
   }

@@ -1,26 +1,24 @@
+import { prisma } from "@/lib/prisma";
 import { ActivityService } from "@/lib/services/activity.service";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const type = searchParams.get("type");
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
-    const isFavorite = searchParams.get("isFavorite");
-
-    const activities = await ActivityService.list({
-      userId: session.user.id,
-      type: type || undefined,
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
-      isFavorite: isFavorite === "true",
+    const activities = await prisma.activity.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        date: "desc",
+      },
     });
 
     return NextResponse.json(activities);
